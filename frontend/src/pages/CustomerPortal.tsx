@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Package, CheckCircle, Truck, Scissors } from 'lucide-react';
+import { api } from '../utils/api';
 
 interface Order {
     id: string;
@@ -20,12 +21,13 @@ const CustomerPortal: React.FC = () => {
         setOrder(null);
 
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/${orderId}`);
+            // Updated to use api utility and new protected endpoint
+            const res = await api.get(`/api/orders/${orderId}`);
             if (!res.ok) throw new Error("Order not found");
             const data = await res.json();
             setOrder(data);
         } catch (err) {
-            setError("Order not found. Please check your Order ID.");
+            setError("Order not found or access denied. Please check your Order ID/Phone and ensure you are logged in.");
         } finally {
             setLoading(false);
         }

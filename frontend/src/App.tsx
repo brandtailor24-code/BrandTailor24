@@ -18,6 +18,7 @@ import TailorDashboard from './pages/TailorDashboard';
 import MenCategory from './pages/MenCategory';
 import WomenCategory from './pages/WomenCategory';
 import WeddingPackages from './pages/WeddingPackages';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
     return (
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/reviews" element={<Reviews />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/tailor" element={<TailorDashboard />} />
+                <Route path="/admin" element={<AdminDashboard />} />
             </Routes>
         </Router>
     );

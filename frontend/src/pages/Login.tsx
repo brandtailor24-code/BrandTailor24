@@ -76,7 +76,7 @@ const Login = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        
+
         if (!validateForm()) {
             return;
         }
@@ -99,10 +99,17 @@ const Login = () => {
             const data = await res.json();
 
             if (res.ok) {
-                // Store user info in localStorage
+                // Store JWT token and user info in localStorage
+                localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
                 alert(isLogin ? 'Login successful!' : 'Registration successful!');
-                navigate('/track');
+
+                // Redirect based on role
+                if (data.user.role === 'admin') {
+                    navigate('/admin');
+                } else {
+                    navigate('/track');
+                }
             } else {
                 setErrors({ general: data.message || 'Authentication failed' });
             }
@@ -146,9 +153,8 @@ const Login = () => {
                                 placeholder="Full Name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#0f392b] outline-none ${
-                                    errors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                                }`}
+                                className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#0f392b] outline-none ${errors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                                    }`}
                             />
                             {errors.name && (
                                 <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
@@ -167,9 +173,8 @@ const Login = () => {
                             value={formData.phone}
                             onChange={handleChange}
                             maxLength={10}
-                            className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#0f392b] outline-none ${
-                                errors.phone ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                            }`}
+                            className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#0f392b] outline-none ${errors.phone ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                                }`}
                         />
                         {errors.phone && (
                             <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
@@ -186,9 +191,8 @@ const Login = () => {
                             placeholder={isLogin ? "Password" : "Password (min 6 characters)"}
                             value={formData.password}
                             onChange={handleChange}
-                            className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#0f392b] outline-none ${
-                                errors.password ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                            }`}
+                            className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#0f392b] outline-none ${errors.password ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                                }`}
                         />
                         {errors.password && (
                             <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
