@@ -9,10 +9,7 @@ if (!phone) {
     process.exit(1);
 }
 
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGODB_URI)
     .then(async () => {
         const user = await User.findOne({ phone });
 

@@ -9,10 +9,7 @@ const adminUser = {
     role: "admin"
 };
 
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGODB_URI)
     .then(async () => {
         console.log('✅ MongoDB Connected');
 

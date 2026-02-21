@@ -5,13 +5,22 @@ const inquirySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    email: String,
-    phone: String,
-    message: {
+    phone: {
         type: String,
         required: true
     },
-    receivedAt: {
+    serviceType: {
+        type: String,
+        required: true
+    },
+    message: String,
+    image: String,
+    status: {
+        type: String,
+        enum: ['New', 'Contacted', 'Pickup Scheduled', 'Completed', 'Cancelled'],
+        default: 'New'
+    },
+    createdAt: {
         type: Date,
         default: Date.now
     }

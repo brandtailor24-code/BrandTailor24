@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, MessageCircle, Send } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageCircle, Send, Instagram, Globe } from 'lucide-react';
 
 interface ContactFormData {
     name: string;
@@ -43,33 +43,33 @@ const Contact: React.FC = () => {
                         <div className="bg-white p-8 rounded-2xl shadow-md">
                             <h2 className="text-2xl font-bold text-[#0f392b] mb-6">Contact Information</h2>
                             <div className="space-y-6">
-                                <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-colors group">
+                                <a href="https://wa.me/918088383279" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-colors group">
                                     <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
                                         <MessageCircle size={24} />
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-500">Chat on WhatsApp</p>
-                                        <p className="font-bold text-[#0f392b] text-lg">+91 98765 43210</p>
+                                        <p className="font-bold text-[#0f392b] text-lg">+91 8088383279</p>
                                     </div>
                                 </a>
 
-                                <a href="tel:+919876543210" className="flex items-center gap-4 p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors group">
+                                <a href="tel:+918088383279" className="flex items-center gap-4 p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors group">
                                     <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
                                         <Phone size={24} />
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-500">Call Us Now</p>
-                                        <p className="font-bold text-[#0f392b] text-lg">+91 98765 43210</p>
+                                        <p className="font-bold text-[#0f392b] text-lg">+91 8088383279</p>
                                     </div>
                                 </a>
 
-                                <a href="mailto:hello@brandtailore.com" className="flex items-center gap-4 p-4 bg-orange-50 rounded-xl hover:bg-orange-100 transition-colors group">
+                                <a href="mailto:brandtailor24@gmail.com" className="flex items-center gap-4 p-4 bg-orange-50 rounded-xl hover:bg-orange-100 transition-colors group">
                                     <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
                                         <Mail size={24} />
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-500">Email Us</p>
-                                        <p className="font-bold text-[#0f392b] text-lg">hello@brandtailore.com</p>
+                                        <p className="font-bold text-[#0f392b] text-lg">brandtailor24@gmail.com</p>
                                     </div>
                                 </a>
 
@@ -82,6 +82,26 @@ const Contact: React.FC = () => {
                                         <p className="font-bold text-[#0f392b]">123, Fashion Street, Jubilee Hills, Hyderabad</p>
                                     </div>
                                 </div>
+
+                                <a href="https://www.instagram.com/brandtailor" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-pink-50 rounded-xl hover:bg-pink-100 transition-colors group">
+                                    <div className="w-12 h-12 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+                                        <Instagram size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-500">Follow on Instagram</p>
+                                        <p className="font-bold text-[#0f392b] text-lg">@brandtailor</p>
+                                    </div>
+                                </a>
+
+                                <a href="https://www.google.com/search?q=Brand+Tailor" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors group">
+                                    <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+                                        <Globe size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-500">Find us on Google</p>
+                                        <p className="font-bold text-[#0f392b] text-lg">Brand Tailor Reviews</p>
+                                    </div>
+                                </a>
                             </div>
                         </div>
 
@@ -102,7 +122,7 @@ const Contact: React.FC = () => {
                     {/* Contact Form */}
                     <div className="bg-white p-8 rounded-2xl shadow-lg h-fit">
                         <h2 className="text-2xl font-bold text-[#0f392b] mb-6">Send us a Message</h2>
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
                                 <input

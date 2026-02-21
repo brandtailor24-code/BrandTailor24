@@ -15,6 +15,10 @@ export default {
                     DEFAULT: '#d4af37',
                     light: '#eac159',
                 },
+                brand: {
+                    dark: '#0f392b',
+                    gold: '#d4af37',
+                }
             },
             fontFamily: {
                 sans: ['Outfit', 'sans-serif'],
