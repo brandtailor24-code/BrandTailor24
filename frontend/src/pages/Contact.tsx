@@ -83,13 +83,13 @@ const Contact: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <a href="https://www.instagram.com/brandtailor" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-pink-50 rounded-xl hover:bg-pink-100 transition-colors group">
+                                <a href="https://www.instagram.com/brandtailor.blr" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-pink-50 rounded-xl hover:bg-pink-100 transition-colors group">
                                     <div className="w-12 h-12 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
                                         <Instagram size={24} />
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-500">Follow on Instagram</p>
-                                        <p className="font-bold text-[#0f392b] text-lg">@brandtailor</p>
+                                        <p className="font-bold text-[#0f392b] text-lg">@brandtailor.blr</p>
                                     </div>
                                 </a>
 
