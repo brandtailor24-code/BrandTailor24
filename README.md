@@ -12,6 +12,7 @@ A premium web application for custom tailoring services. Manage orders, track me
 ## 📋 Table of Contents
 
 - [Features](#-features)
+- [Services & Pricing](#-services--pricing)
 - [Tech Stack](#-tech-stack)
 - [Prerequisites](#-prerequisites)
 - [Installation](#-installation)
@@ -45,6 +46,64 @@ A premium web application for custom tailoring services. Manage orders, track me
 - 📱 Fully responsive design
 - 🌙 Glass-morphism effects
 - 🎯 Intuitive user experience
+
+---
+
+## 👗 Services & Pricing
+
+Here is a detailed breakdown of our bespoke tailoring services, including estimated turnaround times and starting prices:
+
+### 🧵 Custom Blouse Studio
+| Service | Description | Starting Price | Time |
+|---------|-------------|----------------|------|
+| **Normal Blouse (Without Lining)** | Basic stitching without lining. | ₹250 | 2-4 days |
+| **Lining Blouse (Simple Neck)** | Stitched with lining, simple neck design. | ₹500 | 3-5 days |
+| **Lehenga Blouse (Specialty Cut)** | Special cut for lehengas. | ₹650 | 5-7 days |
+| **Design Neck (With Lining)** | Custom neck design with lining. | ₹750 | 4-6 days |
+| **Designer Pattern Blouse** | Intricate designer patterns. | ₹1,250 | 7-10 days |
+| **Machine Embroidery Blouse** | Machine embroidery work. | ₹1,500 | 10-14 days |
+| **Handloom Embroidery Blouse** | Exquisite handloom embroidery. | ₹3,500 | 15-20 days |
+
+### 👗 Lehenga Bottoms & Skirts
+| Service | Description | Starting Price | Time |
+|---------|-------------|----------------|------|
+| **Normal Lehenga Bottom** | Basic lehenga stitching. | ₹600 | 4-6 days |
+| **Simple Pattu/Silk Lehenga** | Traditional silk lehenga stitching. | ₹800 | 5-7 days |
+| **Designer Flared Lehenga** | Extra flare and designer cut. | ₹1,500 | 7-10 days |
+
+### ✨ Salwar & Ethnic Wear
+| Service | Description | Starting Price | Time |
+|---------|-------------|----------------|------|
+| **Salwar Top (Without Lining)** | Simple top stitching. | ₹400 | 3-5 days |
+| **Salwar Pant (Without Lining)** | Simple pant stitching. | ₹400 | 3-5 days |
+| **Salwar Top (With Lining)** | Top stitching with lining. | ₹550 | 4-6 days |
+| **Salwar Pant (With Lining)** | Pant stitching with lining. | ₹550 | 4-6 days |
+
+### 👑 Gown Collection
+| Service | Description | Starting Price | Time |
+|---------|-------------|----------------|------|
+| **Simple Gown (Without Lining)** | Basic gown stitching. | ₹950 | 5-7 days |
+| **Designer Gown (With Lining)** | Premium designer gown. | ₹4,000 | 10-15 days |
+
+### 👖 Western & Co-ord Sets
+| Service | Description | Starting Price | Time |
+|---------|-------------|----------------|------|
+| **Women’s Co-ord Set** | Trendy co-ord set (Base Price). Custom styles available. | ₹1,200 | 7-10 days |
+| **Women’s Blazer** | Custom fit blazer (Based on fabric/structure). | ₹2,500 | 10-14 days |
+
+### 👯‍♀️ Celebration Combos
+| Service | Description | Starting Price | Time |
+|---------|-------------|----------------|------|
+| **Birthday Combo** | Special birthday themed outfits. | ₹4,000 | 10-15 days |
+| **Mom & Daughter Combo** | Matching outfits (Custom order basis). | ₹5,000 | 15-20 days |
+
+### 👰‍♀️ Bridal & Wedding Packages
+| Service | Description | Starting Price | Time |
+|---------|-------------|----------------|------|
+| **Wedding Gown & Blouse Set** | Complete wedding ensemble. | ₹12,000 | 20-30 days |
+| **Bridal Party Bulk Orders** | Bulk stitching for bridal party (Contact for details). | ₹20,000 | 25-35 days |
+
+*Note: Prices vary based on design complexity, fabric choice, and additional customizations.*
 
 ---
 

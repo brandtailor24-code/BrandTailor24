@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import ScrollToHashElement from './components/ScrollToHashElement';
 import LandingPage from './pages/LandingPage';
 import About from './pages/About';
 import Services from './pages/Services';
@@ -14,6 +15,7 @@ import AdminDashboard from './pages/AdminDashboard';
 function App() {
     return (
         <Router>
+            <ScrollToHashElement />
             <Navbar />
             <Routes>
                 <Route path="/" element={<LandingPage />} />
