@@ -93,7 +93,7 @@ const Contact: React.FC = () => {
                                     </div>
                                 </a>
 
-                                <a href="https://www.google.com/search?q=Brand+Tailor" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors group">
+                                <a href="https://share.google/kG8Oc9pXmXLpgpcDC" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors group">
                                     <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
                                         <Globe size={24} />
                                     </div>
