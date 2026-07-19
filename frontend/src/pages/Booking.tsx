@@ -150,9 +150,9 @@ const Booking: React.FC = () => {
                 }
             };
 
-            await api.post('/orders', payload);
+            await api.post('/api/orders', payload);
             alert('Booking Successful! We will come to your place for measurements.');
-            window.location.href = '/customer'; // Or redirect to home/success page
+            window.location.href = '/'; // Redirect to home page
         } catch (err) {
             console.error('Booking failed', err);
             alert('Failed to place booking. Please try again.');

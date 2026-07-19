@@ -9,6 +9,7 @@ const User = require('./models/User');
 const Service = require('./models/Service');
 const Review = require('./models/Review');
 const Inquiry = require('./models/Inquiry');
+const Order = require('./models/Order');
 
 // Import middleware
 const auth = require('./middleware/auth');
@@ -94,6 +95,77 @@ app.patch('/api/admin/inquiries/:id', [auth, admin], async (req, res) => {
         res.json(inquiry);
     } catch (error) {
         res.status(500).json({ message: 'Error updating inquiry', error: error.message });
+    }
+});
+
+// --- ORDERS ---
+app.post('/api/orders', async (req, res) => {
+    try {
+        const { name, phone, address, pickupDate, pickupTime, items } = req.body;
+
+        // Generate unique order ID
+        let orderId;
+        let isUnique = false;
+        while (!isUnique) {
+            orderId = 'BT-' + Math.floor(100000 + Math.random() * 900000);
+            const existingOrder = await Order.findOne({ orderId });
+            if (!existingOrder) {
+                isUnique = true;
+            }
+        }
+
+        const newOrder = new Order({
+            orderId,
+            customerName: name,
+            phone,
+            address,
+            pickupDate,
+            pickupTime,
+            items,
+            fabricSelection: req.body.fabricSelection || 'pickup',
+            paymentMode: req.body.paymentMode || 'Pay on Delivery',
+            pickupDetails: req.body.pickupDetails || {
+                address,
+                scheduledTime: new Date(),
+                status: 'Pending'
+            },
+            status: 'Received'
+        });
+
+        const savedOrder = await newOrder.save();
+        res.status(201).json({ message: 'Booking created successfully', order: savedOrder });
+    } catch (error) {
+        res.status(500).json({ message: 'Error creating booking', error: error.message });
+    }
+});
+
+// Admin: Get all orders
+app.get('/api/orders', [auth, admin], async (req, res) => {
+    try {
+        const orders = await Order.find().sort({ createdAt: -1 });
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching bookings', error: error.message });
+    }
+});
+
+// Admin: Update order status
+app.patch('/api/orders/:id', [auth, admin], async (req, res) => {
+    try {
+        const { status, pickupDetails, measurements } = req.body;
+        const updateFields = {};
+        if (status) updateFields.status = status;
+        if (pickupDetails) updateFields.pickupDetails = pickupDetails;
+        if (measurements) updateFields.measurements = measurements;
+
+        const updatedOrder = await Order.findByIdAndUpdate(
+            req.params.id,
+            updateFields,
+            { new: true }
+        );
+        res.json(updatedOrder);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating order', error: error.message });
     }
 });
 
@@ -235,18 +307,14 @@ app.delete('/api/admin/users/:id', [auth, admin], async (req, res) => {
 // Get Dashboard Stats
 app.get('/api/admin/stats', [auth, admin], async (req, res) => {
     try {
-        const totalInquiries = await Inquiry.countDocuments();
-        const pendingInquiries = await Inquiry.countDocuments({ status: 'New' });
-        // const revenue = await Order.aggregate([
-        //     { $match: { status: { $ne: 'Cancelled' } } },
-        //     { $group: { _id: null, total: { $sum: "$price" } } }
-        // ]);
+        const totalOrders = await Order.countDocuments();
+        const pendingOrders = await Order.countDocuments({ status: { $in: ['Received', 'In Progress', 'Ready'] } });
         const totalUsers = await User.countDocuments({ role: 'user' });
 
         res.json({
-            totalOrders: totalInquiries, // Reusing field name for compatibility if frontend expects it, or update frontend to read totalInquiries
-            pendingOrders: pendingInquiries,
-            totalRevenue: 0, // Revenue calculation removed as we are pivotting to inquiry model
+            totalOrders,
+            pendingOrders,
+            totalRevenue: 0,
             totalUsers
         });
     } catch (error) {
