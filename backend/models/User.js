@@ -24,6 +24,14 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
+    loginAttempts: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    lockUntil: {
+        type: Date
+    },
     registeredAt: {
         type: Date,
         default: Date.now
@@ -41,8 +49,8 @@ userSchema.pre('save', async function () {
     if (!this.isModified('password')) return;
 
     try {
-        // Generate salt and hash password
-        const salt = await bcrypt.genSalt(10);
+        // Generate salt and hash password (using stronger 12 salt rounds)
+        const salt = await bcrypt.genSalt(12);
         this.password = await bcrypt.hash(this.password, salt);
     } catch (error) {
         throw error;
@@ -56,6 +64,11 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
     } catch (error) {
         throw error;
     }
+};
+
+// Method to check if account is currently locked
+userSchema.methods.isLocked = function() {
+    return !!(this.lockUntil && this.lockUntil > Date.now());
 };
 
 module.exports = mongoose.model('User', userSchema);

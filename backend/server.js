@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 // Import models
 const User = require('./models/User');
@@ -19,18 +21,41 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+// Rate Limiter for Authentication routes (prevent brute force)
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // Limit each IP to 10 requests per windowMs for auth routes
+    message: { message: 'Too many attempts from this IP. Please try again after 15 minutes.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
 
 // Debugging
 console.log("Attempting to connect to MongoDB...");
 console.log("URI Length:", process.env.MONGODB_URI ? process.env.MONGODB_URI.length : "undefined");
 // console.log("URI:", process.env.MONGODB_URI); // Uncomment to see full URI if needed
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('✅ MongoDB Connected Successfully'))
-    .catch(err => console.error('❌ MongoDB Connection Error:', err));
+// MongoDB Connection with Local Offline Fallback
+const connectWithFallback = (uri) => {
+    mongoose.connect(uri)
+        .then(() => console.log(`✅ MongoDB Connected Successfully (${uri.includes('mongodb+srv') ? 'Atlas Cloud' : 'Local Host'})`))
+        .catch(err => {
+            console.error('❌ MongoDB Connection Error:', err.message);
+            const localURI = 'mongodb://127.0.0.1:27017/brandtailor';
+            if (uri !== localURI) {
+                console.log('🔄 Offline Mode: Attempting connection to local MongoDB fallback at 127.0.0.1:27017...');
+                connectWithFallback(localURI);
+            } else {
+                console.error('❌ Critical: Local MongoDB connection also failed. Please ensure MongoDB service is running.');
+            }
+        });
+};
+
+connectWithFallback(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/brandtailor');
 
 // --- SERVICES ---
 app.get('/api/services', async (req, res) => {
@@ -170,9 +195,12 @@ app.patch('/api/orders/:id', [auth, admin], async (req, res) => {
 });
 
 // --- AUTHENTICATION ---
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', authLimiter, async (req, res) => {
     try {
-        const { name, phone, password } = req.body;
+        // Clean and Sanitize Inputs
+        const name = req.body.name ? req.body.name.trim().replace(/[<>]/g, "") : ""; // Sanitize simple HTML/XSS
+        const phone = req.body.phone ? req.body.phone.trim() : "";
+        const password = req.body.password ? req.body.password : "";
 
         // Validation
         if (!name || !phone || !password) {
@@ -183,8 +211,12 @@ app.post('/api/auth/register', async (req, res) => {
             return res.status(400).json({ message: 'Phone number must be exactly 10 digits' });
         }
 
-        if (password.length < 6) {
-            return res.status(400).json({ message: 'Password must be at least 6 characters' });
+        // Strong Password Validation: min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ 
+                message: 'Password must be at least 8 characters long, and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).' 
+            });
         }
 
         // Check if user already exists
@@ -218,9 +250,11 @@ app.post('/api/auth/register', async (req, res) => {
     }
 });
 
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', authLimiter, async (req, res) => {
     try {
-        const { phone, password } = req.body;
+        // Clean and Sanitize Inputs
+        const phone = req.body.phone ? req.body.phone.trim() : "";
+        const password = req.body.password ? req.body.password : "";
 
         // Validation
         if (!phone || !password) {
@@ -234,13 +268,39 @@ app.post('/api/auth/login', async (req, res) => {
         // Find user
         const user = await User.findOne({ phone });
         if (!user) {
+            // Generic Error Message to prevent user enumeration
             return res.status(401).json({ message: 'Invalid phone number or password' });
+        }
+
+        // Check if account is locked
+        if (user.isLocked()) {
+            const timeRemaining = Math.ceil((user.lockUntil - Date.now()) / 60000);
+            return res.status(423).json({ 
+                message: `Account is temporarily locked due to too many failed attempts. Try again in ${timeRemaining} minute(s).` 
+            });
         }
 
         // Check password using bcrypt comparison
         const isPasswordValid = await user.comparePassword(password);
         if (!isPasswordValid) {
+            // Increment failed login attempts
+            user.loginAttempts += 1;
+            if (user.loginAttempts >= 5) {
+                user.lockUntil = new Date(Date.now() + 15 * 60 * 1000); // Lock for 15 minutes
+                await user.save();
+                return res.status(423).json({ 
+                    message: 'Account is temporarily locked due to too many failed attempts. Please try again in 15 minutes.' 
+                });
+            }
+            await user.save();
             return res.status(401).json({ message: 'Invalid phone number or password' });
+        }
+
+        // Reset login attempts on successful login
+        if (user.loginAttempts > 0 || user.lockUntil) {
+            user.loginAttempts = 0;
+            user.lockUntil = undefined;
+            await user.save();
         }
 
         // Generate JWT token
@@ -253,6 +313,8 @@ app.post('/api/auth/login', async (req, res) => {
         // Return user without password
         const userResponse = user.toObject();
         delete userResponse.password;
+        delete userResponse.loginAttempts;
+        delete userResponse.lockUntil;
 
         res.status(200).json({
             message: 'Login successful',
@@ -327,3 +389,5 @@ app.get('/api/admin/stats', [auth, admin], async (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
+
+module.exports = app;

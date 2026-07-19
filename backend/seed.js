@@ -41,23 +41,39 @@ const services = [
     { category: "Wedding", name: "Bridal Party Bulk Order", price: 20000, time: "25-35 days", desc: "Bulk stitching for bridal party (Contact us)." }
 ];
 
-// Connect to MongoDB and seed data
-mongoose.connect(process.env.MONGODB_URI)
-    .then(async () => {
-        console.log('✅ MongoDB Connected');
+const seedData = async () => {
+    // Clear existing services
+    await Service.deleteMany({});
+    console.log('🗑️  Cleared existing services');
 
-        // Clear existing services
-        await Service.deleteMany({});
-        console.log('🗑️  Cleared existing services');
+    // Insert new services
+    await Service.insertMany(services);
+    console.log('✅ Seeded services data');
 
-        // Insert new services
-        await Service.insertMany(services);
-        console.log('✅ Seeded services data');
+    console.log('🎉 Database seeding completed!');
+    process.exit(0);
+};
 
-        console.log('🎉 Database seeding completed!');
-        process.exit(0);
-    })
-    .catch(err => {
-        console.error('❌ Error:', err);
-        process.exit(1);
-    });
+const connectAndSeed = (uri) => {
+    mongoose.connect(uri)
+        .then(() => {
+            console.log(`✅ MongoDB Connected (${uri.includes('mongodb+srv') ? 'Atlas Cloud' : 'Local Host'})`);
+            seedData().catch(e => {
+                console.error('❌ Seeding Error:', e);
+                process.exit(1);
+            });
+        })
+        .catch(err => {
+            console.error('❌ Connection Error:', err.message);
+            const localURI = 'mongodb://127.0.0.1:27017/brandtailor';
+            if (uri !== localURI) {
+                console.log('🔄 Offline Mode: Retrying seed on local MongoDB fallback...');
+                connectAndSeed(localURI);
+            } else {
+                console.error('❌ Critical: Local seed failed.');
+                process.exit(1);
+            }
+        });
+};
+
+connectAndSeed(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/brandtailor');
