@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, MessageCircle, Send, Instagram, Globe } from 'lucide-react';
+import { API_BASE_URL } from '../utils/api';
 
 interface ContactFormData {
     name: string;
@@ -13,7 +14,7 @@ const Contact: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:5000/api/contact', {
+            const res = await fetch(`${API_BASE_URL}/api/contact`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)

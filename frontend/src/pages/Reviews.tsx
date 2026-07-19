@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
+import { API_BASE_URL } from '../utils/api';
 
 interface Review {
     name: string;
@@ -12,7 +13,7 @@ const Reviews: React.FC = () => {
     const [reviews, setReviews] = useState<Review[]>([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/reviews')
+        fetch(`${API_BASE_URL}/api/reviews`)
             .then(res => res.json())
             .then(data => setReviews(data))
             .catch(err => console.error("Failed to fetch reviews", err));

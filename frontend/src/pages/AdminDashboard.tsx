@@ -4,6 +4,7 @@ import {
     TrendingUp, CheckCircle2, MessageSquare, MapPin, Search, 
     Star, Clock, UserCheck, Play, Check, X, ShieldAlert
 } from 'lucide-react';
+import { API_BASE_URL } from '../utils/api';
 
 interface OrderItem {
     category: string;
@@ -59,28 +60,28 @@ const AdminDashboard = () => {
             const headers = { 'Authorization': `Bearer ${token}` };
             
             // Fetch stats
-            const statsRes = await fetch('http://localhost:5000/api/admin/stats', { headers });
+            const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, { headers });
             if (statsRes.ok) {
                 const statsData = await statsRes.json();
                 setStats(statsData);
             }
 
             // Fetch users
-            const usersRes = await fetch('http://localhost:5000/api/admin/users', { headers });
+            const usersRes = await fetch(`${API_BASE_URL}/api/admin/users`, { headers });
             if (usersRes.ok) {
                 const usersData = await usersRes.json();
                 setUsers(usersData);
             }
 
             // Fetch bookings/orders
-            const ordersRes = await fetch('http://localhost:5000/api/orders', { headers });
+            const ordersRes = await fetch(`${API_BASE_URL}/api/orders`, { headers });
             if (ordersRes.ok) {
                 const ordersData = await ordersRes.json();
                 setOrders(ordersData);
             }
 
             // Fetch reviews
-            const reviewsRes = await fetch('http://localhost:5000/api/reviews');
+            const reviewsRes = await fetch(`${API_BASE_URL}/api/reviews`);
             if (reviewsRes.ok) {
                 const reviewsData = await reviewsRes.json();
                 setReviews(reviewsData);
@@ -99,7 +100,7 @@ const AdminDashboard = () => {
     // Update order status
     const handleUpdateStatus = async (id: string, newStatus: string) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/orders/${id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/orders/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -110,7 +111,7 @@ const AdminDashboard = () => {
             if (res.ok) {
                 setOrders(orders.map(o => o._id === id ? { ...o, status: newStatus as any } : o));
                 // Refresh stats
-                const statsRes = await fetch('http://localhost:5000/api/admin/stats', {
+                const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (statsRes.ok) {
@@ -127,7 +128,7 @@ const AdminDashboard = () => {
         const newRole = currentRole === 'admin' ? 'user' : 'admin';
         if (!window.confirm(`Are you sure you want to change this user's role to ${newRole}?`)) return;
         try {
-            const res = await fetch(`http://localhost:5000/api/admin/users/${id}/role`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/users/${id}/role`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -146,7 +147,7 @@ const AdminDashboard = () => {
     const handleDeleteUser = async (id: string) => {
         if (!window.confirm("Are you sure you want to delete this user?")) return;
         try {
-            const res = await fetch(`http://localhost:5000/api/admin/users/${id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/users/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
