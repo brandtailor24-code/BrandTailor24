@@ -68,7 +68,11 @@ const Login = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        
+        // Sanitize phone input in real-time to only allow digits
+        const cleanValue = name === 'phone' ? value.replace(/\D/g, '') : value;
+
+        setFormData(prev => ({ ...prev, [name]: cleanValue }));
         // Clear error for this field when user starts typing
         if (errors[name as keyof FormErrors]) {
             setErrors(prev => ({ ...prev, [name]: undefined }));

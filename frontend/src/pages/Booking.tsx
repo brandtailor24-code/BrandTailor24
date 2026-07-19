@@ -68,10 +68,15 @@ const Booking: React.FC = () => {
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>): void => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        
+        // Sanitize phone input in real-time to only allow digits
+        const cleanValue = name === 'phone' ? value.replace(/\D/g, '') : value;
+
+        setFormData({ ...formData, [name]: cleanValue });
         // Clear error when user starts typing
-        if (errors[e.target.name]) {
-            setErrors({ ...errors, [e.target.name]: '' });
+        if (errors[name]) {
+            setErrors({ ...errors, [name]: '' });
         }
     };
 
