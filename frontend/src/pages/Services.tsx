@@ -1,6 +1,54 @@
 import React, { useEffect, useState } from 'react';
-import { Scissors, Check } from 'lucide-react';
+import { Scissors, Layers, Shirt, Crown, Gem, Gift, Sparkles, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+// Import local premium category images
+import blouseImg from '../assets/designer_blouse.png';
+import lehengaImg from '../assets/lehenga_skirts.png';
+import salwarImg from '../assets/salwar_kurtis.png';
+import gownImg from '../assets/gown_collection.png';
+import westernImg from '../assets/western_coords.png';
+import comboImg from '../assets/celebration_combos.png';
+import bridalImg from '../assets/bridal_lehenga.png';
+
+// Category metadata mapping
+const categoryMeta: Record<string, { image: string; icon: React.ComponentType<any>; tag: string }> = {
+    "Custom Blouse Studio": {
+        image: blouseImg,
+        icon: Scissors,
+        tag: "Perfect Cuts & Fits"
+    },
+    "Lehenga Bottoms & Skirts": {
+        image: lehengaImg,
+        icon: Layers,
+        tag: "Traditional Elegance"
+    },
+    "Salwar & Ethnic Wear": {
+        image: salwarImg,
+        icon: Shirt,
+        tag: "Comfortable Grace"
+    },
+    "Gown Collection": {
+        image: gownImg,
+        icon: Crown,
+        tag: "Flowing Silhouette"
+    },
+    "Western & Co-ord Sets": {
+        image: westernImg,
+        icon: Gem,
+        tag: "Modern & Trendy"
+    },
+    "Celebration Combos": {
+        image: comboImg,
+        icon: Gift,
+        tag: "Festive Joy"
+    },
+    "Bridal & Wedding Packages": {
+        image: bridalImg,
+        icon: Sparkles,
+        tag: "Bespoke Grandeur"
+    }
+};
 
 interface Service {
     id: any;
@@ -84,40 +132,62 @@ const Services = () => {
                                 acc[cat].push(service);
                                 return acc;
                             }, {} as Record<string, Service[]>)
-                        ).map(([category, categoryServices]) => (
-                            <div key={category}>
-                                <h3 className="text-3xl font-bold text-brand-dark mb-8 border-b-2 border-brand-gold/20 pb-2 inline-block">
-                                    {category} Collection
-                                </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                    {categoryServices.map((service) => (
-                                        <div key={service.id} className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group">
-                                            <div className="p-8">
-                                                <div className="w-14 h-14 bg-brand-gold/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-brand-gold/20 transition-colors">
-                                                    <Scissors className="w-6 h-6 text-brand-gold" />
-                                                </div>
-                                                <span className="text-xs font-bold text-brand-gold uppercase tracking-wider mb-2 block">{service.category}</span>
-                                                <h3 className="text-2xl font-bold text-brand-dark mb-3">{service.name}</h3>
-                                                <p className="text-gray-600 mb-6 min-h-[48px] text-sm">{service.desc}</p>
+                        ).map(([category, categoryServices]) => {
+                            const meta = categoryMeta[category] || { image: blouseImg, icon: Scissors, tag: "Premium Stitching" };
+                            const IconComponent = meta.icon;
+                            return (
+                                <div key={category} className="space-y-8">
+                                    {/* Category Visual Banner */}
+                                    <div className="relative h-48 md:h-64 rounded-2xl overflow-hidden shadow-xl group">
+                                        <img 
+                                            src={meta.image} 
+                                            alt={category} 
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/70 to-transparent"></div>
+                                        <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-10 z-10">
+                                            <span className="text-brand-gold text-xs font-bold uppercase tracking-[0.2em] mb-1 block">
+                                                {meta.tag}
+                                            </span>
+                                            <h3 className="text-2xl md:text-4xl font-playfair font-bold text-white mb-1">
+                                                {category} Collection
+                                            </h3>
+                                        </div>
+                                    </div>
 
-                                                <div className="flex items-center justify-between mt-auto pt-6 border-t border-gray-100">
-                                                    <div>
-                                                        <span className="text-xs text-gray-500 block">Pricing</span>
-                                                        <span className="text-xl font-bold text-brand-dark">₹{service.price.toLocaleString()}</span>
+                                    {/* Services Grid */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                        {categoryServices.map((service) => (
+                                            <div key={service.id} className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
+                                                <div className="p-8">
+                                                    <div className="w-14 h-14 bg-brand-gold/10 rounded-full flex items-center justify-center mb-6 group-hover:bg-brand-gold/20 transition-colors">
+                                                        <IconComponent className="w-6 h-6 text-brand-gold" />
                                                     </div>
-                                                    <Link
-                                                        to="/book"
-                                                        className="px-6 py-2 bg-brand-dark text-white text-sm font-bold rounded-full hover:bg-brand-gold hover:text-brand-dark transition-colors"
-                                                    >
-                                                        Book
-                                                    </Link>
+                                                    <span className="text-xs font-bold text-brand-gold uppercase tracking-wider mb-2 block">{service.category}</span>
+                                                    <h3 className="text-2xl font-bold text-brand-dark mb-3">{service.name}</h3>
+                                                    <p className="text-gray-600 mb-6 min-h-[48px] text-sm">{service.desc}</p>
+                                                </div>
+
+                                                <div className="p-8 pt-0 mt-auto border-t border-gray-100">
+                                                    <div className="flex items-center justify-between">
+                                                        <div>
+                                                            <span className="text-xs text-gray-500 block">Pricing</span>
+                                                            <span className="text-xl font-bold text-brand-dark">₹{service.price.toLocaleString()}</span>
+                                                        </div>
+                                                        <Link
+                                                            to="/book"
+                                                            className="px-6 py-2 bg-brand-dark text-white text-sm font-bold rounded-full hover:bg-brand-gold hover:text-brand-dark transition-colors"
+                                                        >
+                                                            Book
+                                                        </Link>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
 

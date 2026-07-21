@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Scissors, Truck, Clock, ArrowRight } from 'lucide-react';
+import bridalImg from '../assets/bridal_lehenga.png';
+import blouseImg from '../assets/designer_blouse.png';
+import salwarImg from '../assets/salwar_kurtis.png';
 
 const LandingPage = () => {
     return (
@@ -124,15 +127,15 @@ const LandingPage = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <ServicePreviewCard
-                            image="https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                            image={bridalImg}
                             title="Bridal & Lehengas"
                         />
                         <ServicePreviewCard
-                            image="https://images.unsplash.com/photo-1610030469983-98e550d6193c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                            image={blouseImg}
                             title="Designer Blouses"
                         />
                         <ServicePreviewCard
-                            image="https://images.unsplash.com/photo-1583391733958-d757271e869f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                            image={salwarImg}
                             title="Salwar & Kurtis"
                         />
                     </div>

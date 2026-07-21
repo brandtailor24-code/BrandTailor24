@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AlertCircle } from 'lucide-react';
 import { API_BASE_URL } from '../utils/api';
 
@@ -26,6 +26,7 @@ const Login = () => {
     const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const validatePhone = (phone: string): boolean => {
         const phoneRegex = /^[0-9]{10}$/;
@@ -109,12 +110,10 @@ const Login = () => {
                 localStorage.setItem('user', JSON.stringify(data.user));
                 alert(isLogin ? 'Login successful!' : 'Registration successful!');
 
-                // Redirect based on role
-                if (data.user.role === 'admin') {
-                    navigate('/admin');
-                } else {
-                    navigate('/track');
-                }
+                // Redirect based on previous location or role
+                const state = location.state as { from?: string } | null;
+                const destination = state?.from || (data.user.role === 'admin' ? '/admin' : '/track');
+                navigate(destination);
             } else {
                 setErrors({ general: data.message || 'Authentication failed' });
             }

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../utils/api';
 
 interface BookingFormData {
@@ -14,6 +15,7 @@ interface BookingFormData {
 }
 
 const Booking: React.FC = () => {
+    const navigate = useNavigate();
     const [step, setStep] = useState<number>(1);
     const [activeCategory, setActiveCategory] = useState<string>(''); // For UI navigation only
     const [formData, setFormData] = useState<BookingFormData>({
@@ -25,6 +27,29 @@ const Booking: React.FC = () => {
         phone: '',
         paymentMode: ''
     });
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Please login or register to book a pickup!');
+            navigate('/login', { state: { from: '/book' } });
+        } else {
+            // Auto-fill the customer's name and phone from their profile
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    setFormData(prev => ({
+                        ...prev,
+                        name: prev.name || user.name || '',
+                        phone: prev.phone || user.phone || ''
+                    }));
+                } catch (e) {
+                    console.error("Error parsing user from localStorage", e);
+                }
+            }
+        }
+    }, [navigate]);
 
     const services: Record<string, string[]> = {
         "Custom Blouse Studio": [
